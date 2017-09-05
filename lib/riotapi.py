@@ -210,7 +210,7 @@ def get(url, method=None, region=None, is_static=False):
           received_limits = list(map(lambda textual_rl: textual_rl.split(':'), static_rl.split(',')))
           old_limits = cache.get('RL_STATIC', None)
           if old_limits is None or json.dumps(sorted(old_limits, key=lambda x: x[1])) != json.dumps(sorted(received_limits, key=lambda x: x[1])):
-            cache.set('RL_STATIC', received_limits)
+            cache.set('RL_STATIC', received_limits, None) # Timeout = None = cache forever
             with open(LOG_PATH, 'a') as fh:
               fh.write('[%s UTC+0] Updated static-API cache-rate-limit since found a new one.\n' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
               fh.write('Old rate limit: ' + (json.dumps(sorted(old_limits, key=lambda x: x[1])) if old_limits else 'None') + '\n')
@@ -237,7 +237,7 @@ def get(url, method=None, region=None, is_static=False):
           received_limits = list(map(lambda textual_rl: textual_rl.split(':'), app_rl.split(',')))
           old_limits = cache.get('RL_APP', None)
           if old_limits is None or json.dumps(sorted(old_limits, key=lambda x: x[1])) != json.dumps(sorted(received_limits, key=lambda x: x[1])):
-            cache.set('RL_APP', received_limits)
+            cache.set('RL_APP', received_limits, None) # Timeout = None = cache forever
             with open(LOG_PATH, 'a') as fh:
               fh.write('[%s UTC+0] Updated app cache-rate-limit since found a new one.\n' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
               fh.write('Old rate limit: ' + (json.dumps(sorted(old_limits, key=lambda x: x[1])) if old_limits else 'None') + '\n')
@@ -263,7 +263,7 @@ def get(url, method=None, region=None, is_static=False):
           received_limits = list(map(lambda textual_rl: textual_rl.split(':'), method_rl.split(',')))
           old_limits = cache.get('RL_METHOD_', None)
           if old_limits is None or json.dumps(sorted(old_limits, key=lambda x: x[1])) != json.dumps(sorted(received_limits, key=lambda x: x[1])):
-            cache.set('RL_METHOD_'+method, received_limits)
+            cache.set('RL_METHOD_'+method, received_limits, None) # Timeout = None = cache forever
             with open(LOG_PATH, 'a') as fh:
               fh.write('[%s UTC+0] Updated method cache-rate-limit since found a new one.\n' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
               fh.write('Old rate limit: ' + (json.dumps(sorted(old_limits, key=lambda x: x[1])) if old_limits else 'None') + '\n')
