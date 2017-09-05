@@ -1,4 +1,14 @@
-/datadragon_daily_versioncheck.json
+datadragon_daily_versioncheck.json
+failed_requests.json
+traversed_matches.json
+traversed_people.json
+traversed_timelines.json
+
+templates/
+migrations
+ddragon_static_assets/
+
 /**/__init__.py
-/templates/
+/**/__pycache__/
+
 .idea/
