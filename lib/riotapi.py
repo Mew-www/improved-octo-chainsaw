@@ -31,8 +31,8 @@ def __get_cursor_and_handle():
 def compare_ratelimits_to_requesthistory(ratelimits, requesthistory):
   epoch_now = int(time.time())
   for rl in ratelimits:
-    max_requests_in_timeframe   = rl[0]
-    timeframe_size              = rl[1]
+    max_requests_in_timeframe   = int(rl[0])
+    timeframe_size              = int(rl[1])
     ratelimited_timeframe_start = epoch_now - timeframe_size
     requests_done_in_timeframe  = list(filter(lambda timestamp: timestamp >= ratelimited_timeframe_start, requesthistory))
     # Compare done requests to permitted amount of requests
