@@ -197,7 +197,7 @@ def get(url, method=None, region=None, is_static=False):
           'status_code': resp.status_code,
           'content': resp.text,
           'headers': resp.headers
-        })
+        }, fh)
         fh.write('\n')
     else:
       if is_static:
@@ -211,7 +211,7 @@ def get(url, method=None, region=None, is_static=False):
               'status_code': resp.status_code,
               'content': resp.text,
               'headers': resp.headers
-            })
+            }, fh)
             fh.write('\n')
         else:
           with open(LOG_PATH, 'a') as fh:
@@ -220,7 +220,7 @@ def get(url, method=None, region=None, is_static=False):
               'status_code': resp.status_code,
               'content': resp.text,
               'headers': resp.headers
-            })
+            }, fh)
             fh.write('\n')
       else:
         # Update app-ratelimit
@@ -233,7 +233,7 @@ def get(url, method=None, region=None, is_static=False):
               'status_code': resp.status_code,
               'content': resp.text,
               'headers': resp.headers
-            })
+            }, fh)
             fh.write('\n')
         else:
           with open(LOG_PATH, 'a') as fh:
@@ -242,7 +242,7 @@ def get(url, method=None, region=None, is_static=False):
               'status_code': resp.status_code,
               'content': resp.text,
               'headers': resp.headers
-            })
+            }, fh)
             fh.write('\n')
         # Update method-ratelimit
         method_rl = resp.headers.get('X-Method-Rate-Limit', None)
@@ -254,7 +254,7 @@ def get(url, method=None, region=None, is_static=False):
               'status_code': resp.status_code,
               'content': resp.text,
               'headers': resp.headers
-            })
+            }, fh)
             fh.write('\n')
         else:
           with open(LOG_PATH, 'a') as fh:
@@ -263,7 +263,7 @@ def get(url, method=None, region=None, is_static=False):
               'status_code': resp.status_code,
               'content': resp.text,
               'headers': resp.headers
-            })
+            }, fh)
             fh.write('\n')
 
     try:
