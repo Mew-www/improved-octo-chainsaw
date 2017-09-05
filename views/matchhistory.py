@@ -46,9 +46,9 @@ def get_past_ranked_soloduo_matchids(request):
 
   # (GET) List of past games up to maxcount
   r = riotapi.get(riotapi.platform(region)
-                  + "/lol/match/v3/matchlists/by-account/"+account_id
-                  + "?queue=420"
-                  + "&season="+str(CURRENT_SEASON))
+      + "/lol/match/v3/matchlists/by-account/"+account_id
+      + "?queue=420"
+      + "&season="+str(CURRENT_SEASON), method="match/v3/matchlist", region=region)
   if not r['success']:
     return HttpResponseServerError(json.dumps(r))
   if r['status'] == 404:
@@ -98,9 +98,9 @@ def get_past_ranked_flex_matchids(request):
 
   # (GET) List of past games up to maxcount
   r = riotapi.get(riotapi.platform(region)
-                  + "/lol/match/v3/matchlists/by-account/"+account_id
-                  + "?queue=440"
-                  + "&season="+str(CURRENT_SEASON))
+      + "/lol/match/v3/matchlists/by-account/"+account_id
+      + "?queue=440"
+      + "&season="+str(CURRENT_SEASON), method="match/v3/matchlist", region=region)
   if not r['success']:
     return HttpResponseServerError(json.dumps(r))
   if r['status'] == 404:
@@ -150,9 +150,9 @@ def get_past_ranked_flex_soloduo_matchids(request):
 
   # (GET) List of past games up to maxcount
   r = riotapi.get(riotapi.platform(region)
-                  + "/lol/match/v3/matchlists/by-account/"+account_id
-                  + "?queue=420&queue=440"
-                  + "&season="+str(CURRENT_SEASON))
+      + "/lol/match/v3/matchlists/by-account/"+account_id
+      + "?queue=420&queue=440"
+      + "&season="+str(CURRENT_SEASON), method="match/v3/matchlist", region=region)
   if not r['success']:
     return HttpResponseServerError(json.dumps(r))
   if r['status'] == 404:

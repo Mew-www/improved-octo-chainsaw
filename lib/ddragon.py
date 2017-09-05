@@ -13,7 +13,7 @@ def should_check_version():
   return False
 
 def update_version():
-  r = riotapi.get_non_ratelimited("https://euw1.api.riotgames.com/lol/static-data/v3/versions")
+  r = riotapi.get("https://euw1.api.riotgames.com/lol/static-data/v3/versions", is_static=True)
   if not r['success']:
     return False
   newest_euw_version = r['data'][0]

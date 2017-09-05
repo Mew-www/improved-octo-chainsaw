@@ -34,7 +34,7 @@ def get_all_uptodate(request):
 
   # (GET) Summoner championmasteries
   r = riotapi.get(riotapi.platform(region)
-                  + "/lol/champion-mastery/v3/champion-masteries/by-summoner/"+summoner_id)
+      + "/lol/champion-mastery/v3/champion-masteries/by-summoner/"+summoner_id, method="championmastery/v3", region=region)
   if not r['success']:
     return HttpResponseServerError(json.dumps(r))
   if r['status'] == 404:

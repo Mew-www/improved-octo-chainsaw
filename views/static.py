@@ -49,12 +49,12 @@ def all_summonerspells(request):
 def refresh_all_champion_metadata(request):
 
   # (GET) dump of all Champion metadata from STATIC API
-  r = riotapi.get_non_ratelimited(riotapi.platform("EUW")
-                                  +"/lol/static-data/v3/champions"
-                                  + "?champListData=allytips"
-                                  + "&champListData=enemytips"
-                                  + "&champListData=passive"
-                                  + "&champListData=spells")
+  r = riotapi.get(riotapi.platform("EUW")
+      +"/lol/static-data/v3/champions"
+      + "?champListData=allytips"
+      + "&champListData=enemytips"
+      + "&champListData=passive"
+      + "&champListData=spells", is_static=True)
   if not r['success']:
     return HttpResponseServerError(json.dumps(r))
   if r['status'] == 200:
@@ -121,13 +121,13 @@ def refresh_all_champion_metadata(request):
 def refresh_all_item_metadata(request):
 
   # (GET) dump of SELECTED Items' metadata from STATIC API
-  r = riotapi.get_non_ratelimited(riotapi.platform("EUW")
-                                  + "/lol/static-data/v3/items"
-                                  + "?itemListData=from"
-                                  + "&itemListData=into"
-                                  + "&itemListData=gold"
-                                  + "&itemListData=image"
-                                  + "&itemListData=stats")
+  r = riotapi.get(riotapi.platform("EUW")
+      + "/lol/static-data/v3/items"
+      + "?itemListData=from"
+      + "&itemListData=into"
+      + "&itemListData=gold"
+      + "&itemListData=image"
+      + "&itemListData=stats", is_static=True)
   if not r['success']:
     return HttpResponseServerError(json.dumps(r))
   if r['status'] == 200:
@@ -153,10 +153,10 @@ def refresh_all_item_metadata(request):
 def refresh_all_summonerspell_metadata(request):
 
   # (GET) dump of SELECTED summonerspell metadata from STATIC API
-  r = riotapi.get_non_ratelimited(riotapi.platform("EUW")
-                                  + "/lol/static-data/v3/summoner-spells"
-                                  + "?spellListData=range"
-                                  + "&spellListData=cooldown")
+  r = riotapi.get(riotapi.platform("EUW")
+      + "/lol/static-data/v3/summoner-spells"
+      + "?spellListData=range"
+      + "&spellListData=cooldown", is_static=True)
   if not r['success']:
     return HttpResponseServerError(json.dumps(r))
   if r['status'] == 200:

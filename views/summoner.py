@@ -45,7 +45,7 @@ def get_by_name(request):
 
   # (GET) Summoner basedata
   r = riotapi.get(riotapi.platform(region)
-                  + "/lol/summoner/v3/summoners/by-name/"+name.lower())
+      + "/lol/summoner/v3/summoners/by-name/"+name.lower(), method="summoner/v3", region=region)
   if not r['success']:
     return HttpResponseServerError(json.dumps(r))
   if r['status'] == 404:
@@ -93,7 +93,7 @@ def get_by_id(request):
 
   # (GET) Summoner basedata
   r = riotapi.get(riotapi.platform(region)
-                  + "/lol/summoner/v3/summoners/by-account/"+account_id)
+      + "/lol/summoner/v3/summoners/by-account/"+account_id, method="summoner/v3", region=region)
   if not r['success']:
     return HttpResponseServerError(json.dumps(r))
   if r['status'] == 404:

@@ -34,7 +34,7 @@ def get_all_uptodate(request):
 
   # (GET) Summoner leagues' positions
   r = riotapi.get(riotapi.platform(region)
-                  + "/lol/league/v3/positions/by-summoner/"+summoner_id)
+      + "/lol/league/v3/positions/by-summoner/"+summoner_id, method="league/v3", region=region)
   if not r['success']:
     return HttpResponseServerError(json.dumps(r))
   if r['status'] == 404:

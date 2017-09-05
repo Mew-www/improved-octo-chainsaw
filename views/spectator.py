@@ -31,7 +31,7 @@ def get_current_gameinfo(request):
 
   # (GET) Current gameinfo
   r = riotapi.get(riotapi.platform(region)
-                  + "/lol/spectator/v3/active-games/by-summoner/"+summoner_id)
+      + "/lol/spectator/v3/active-games/by-summoner/"+summoner_id, method="spectator/v3", region=region)
 
   if not r['success']:
     return HttpResponseServerError(json.dumps(r))
@@ -70,7 +70,7 @@ def get_odd_api_current_gameinfo(request):
     return HttpResponseBadRequest("Invalid summoner id")
 
   # (GET) Current gameinfo
-  r = riotapi.get("https://"+region.lower()+".api.pvp.net/observer-mode/rest/consumer/getSpectatorGameInfo/"+platform+"/"+summoner_id)
+  r = riotapi.get("https://"+region.lower()+".api.pvp.net/observer-mode/rest/consumer/getSpectatorGameInfo/"+platform+"/"+summoner_id, method="odd-api", region=region)
   if not r['success']:
     return HttpResponseServerError(json.dumps(r))
   if r['status'] == 404:

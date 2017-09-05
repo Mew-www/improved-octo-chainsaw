@@ -40,7 +40,7 @@ def get_single_match(request):
   elif find_query['data'] is None:
     # Didn't exist so fetch
     r = riotapi.get(riotapi.platform(region)
-                    + "/lol/match/v3/matches/"+match_id)
+        + "/lol/match/v3/matches/"+match_id, method="match/v3", region=region)
 
     if not r['success']:
       return HttpResponseServerError(json.dumps(r))
@@ -84,7 +84,7 @@ def get_single_timeline(request):
   elif find_query['data'] is None:
     # Didn't exist so fetch
     r = riotapi.get(riotapi.platform(region)
-                    + "/lol/match/v3/timelines/by-match/"+match_id)
+        + "/lol/match/v3/timelines/by-match/"+match_id, method="match/v3", region=region)
 
     if not r['success']:
       return HttpResponseServerError(json.dumps(r))
