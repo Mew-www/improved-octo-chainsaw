@@ -37,7 +37,7 @@ def compare_ratelimits_to_requesthistory(ratelimits, requesthistory):
     requests_done_in_timeframe  = filter(lambda timestamp: timestamp >= ratelimited_timeframe_start, requesthistory)
     # Compare done requests to permitted amount of requests
     if len(requests_done_in_timeframe) >= max_requests_in_timeframe: # Greater-than, in case if ratelimit lowers by time
-      return False, timeframe_size-(epoch_now-requests_done_in_timeframe[-1])} # timeframe_size - time between now and last request caught in timeframe
+      return False, timeframe_size-(epoch_now-requests_done_in_timeframe[-1]) # timeframe_size - time between now and last request caught in timeframe
   # Else, if all checks
   return True, None
 
