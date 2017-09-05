@@ -10,7 +10,7 @@ import MySQLdb as MDB
 from django.core.cache import cache
 
 # Import utils
-import time, requests
+import time, requests, json
 
 def __get_cursor_and_handle():
   dbh = MDB.connect(
