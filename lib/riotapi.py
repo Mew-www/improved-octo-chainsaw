@@ -204,7 +204,7 @@ def get(url, method=None, region=None, is_static=False):
         # Update static-ratelimit
         static_rl = resp.headers.get('X-Method-Rate-Limit', None)
         if static_rl is not None:
-          cache.set('RL_STATIC', map(lambda textual_rl: textual_rl.split(':'), static_rl.split(',')))
+          cache.set('RL_STATIC', list(map(lambda textual_rl: textual_rl.split(':'), static_rl.split(','))))
           with open(LOG_PATH, 'a') as fh:
             fh.write('[%s] Updated static-API cache-rate-limit since found a new one.' % time.strftime('%H:%M (%Ss) %d/%m/%Y', gmtime()))
             json.dump({
@@ -226,7 +226,7 @@ def get(url, method=None, region=None, is_static=False):
         # Update app-ratelimit
         app_rl = resp.headers.get('X-App-Rate-Limit', None)
         if app_rl is not None:
-          cache.set('RL_APP', map(lambda textual_rl: textual_rl.split(':'), app_rl.split(',')))
+          cache.set('RL_APP', list(map(lambda textual_rl: textual_rl.split(':'), app_rl.split(','))))
           with open(LOG_PATH, 'a') as fh:
             fh.write('[%s] Updated app cache-rate-limit since found a new one.' % time.strftime('%H:%M (%Ss) %d/%m/%Y', gmtime()))
             json.dump({
@@ -247,7 +247,7 @@ def get(url, method=None, region=None, is_static=False):
         # Update method-ratelimit
         method_rl = resp.headers.get('X-Method-Rate-Limit', None)
         if method_rl is not None:
-          cache.set('RL_METHOD_'+method, map(lambda textual_rl: textual_rl.split(':'), method_rl.split(',')))
+          cache.set('RL_METHOD_'+method, list(map(lambda textual_rl: textual_rl.split(':'), method_rl.split(','))))
           with open(LOG_PATH, 'a') as fh:
             fh.write('[%s] Updated method cache-rate-limit since found a new one.' % time.strftime('%H:%M (%Ss) %d/%m/%Y', gmtime()))
             json.dump({
