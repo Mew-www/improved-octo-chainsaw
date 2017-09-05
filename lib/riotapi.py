@@ -192,7 +192,7 @@ def get(url, method=None, region=None, is_static=False):
     if resp.status_code != 200:
       # Log the error
       with open(LOG_PATH, 'a') as fh:
-        fh.write('[%s] API request returned non-200.' % time.strftime('%H:%M (%Ss) %d/%m/%Y', gmtime()))
+        fh.write('[%s] API request returned non-200.' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
         json.dump({
           'status_code': resp.status_code,
           'content': resp.text,
@@ -206,7 +206,7 @@ def get(url, method=None, region=None, is_static=False):
         if static_rl is not None:
           cache.set('RL_STATIC', list(map(lambda textual_rl: textual_rl.split(':'), static_rl.split(','))))
           with open(LOG_PATH, 'a') as fh:
-            fh.write('[%s] Updated static-API cache-rate-limit since found a new one.' % time.strftime('%H:%M (%Ss) %d/%m/%Y', gmtime()))
+            fh.write('[%s] Updated static-API cache-rate-limit since found a new one.' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
             json.dump({
               'status_code': resp.status_code,
               'content': resp.text,
@@ -215,7 +215,7 @@ def get(url, method=None, region=None, is_static=False):
             fh.write('\n')
         else:
           with open(LOG_PATH, 'a') as fh:
-            fh.write('[%s] A static-API request did not return method ratelimit, using defaults still.' % time.strftime('%H:%M (%Ss) %d/%m/%Y', gmtime()))
+            fh.write('[%s] A static-API request did not return method ratelimit, using defaults still.' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
             json.dump({
               'status_code': resp.status_code,
               'content': resp.text,
@@ -228,7 +228,7 @@ def get(url, method=None, region=None, is_static=False):
         if app_rl is not None:
           cache.set('RL_APP', list(map(lambda textual_rl: textual_rl.split(':'), app_rl.split(','))))
           with open(LOG_PATH, 'a') as fh:
-            fh.write('[%s] Updated app cache-rate-limit since found a new one.' % time.strftime('%H:%M (%Ss) %d/%m/%Y', gmtime()))
+            fh.write('[%s] Updated app cache-rate-limit since found a new one.' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
             json.dump({
               'status_code': resp.status_code,
               'content': resp.text,
@@ -237,7 +237,7 @@ def get(url, method=None, region=None, is_static=False):
             fh.write('\n')
         else:
           with open(LOG_PATH, 'a') as fh:
-            fh.write('[%s] A NON-static-API request did not return app ratelimit, using defaults still.' % time.strftime('%H:%M (%Ss) %d/%m/%Y', gmtime()))
+            fh.write('[%s] A NON-static-API request did not return app ratelimit, using defaults still.' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
             json.dump({
               'status_code': resp.status_code,
               'content': resp.text,
@@ -249,7 +249,7 @@ def get(url, method=None, region=None, is_static=False):
         if method_rl is not None:
           cache.set('RL_METHOD_'+method, list(map(lambda textual_rl: textual_rl.split(':'), method_rl.split(','))))
           with open(LOG_PATH, 'a') as fh:
-            fh.write('[%s] Updated method cache-rate-limit since found a new one.' % time.strftime('%H:%M (%Ss) %d/%m/%Y', gmtime()))
+            fh.write('[%s] Updated method cache-rate-limit since found a new one.' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
             json.dump({
               'status_code': resp.status_code,
               'content': resp.text,
@@ -258,7 +258,7 @@ def get(url, method=None, region=None, is_static=False):
             fh.write('\n')
         else:
           with open(LOG_PATH, 'a') as fh:
-            fh.write('[%s] A NON-static-API request did not return method ratelimit, using defaults still.' % time.strftime('%H:%M (%Ss) %d/%m/%Y', gmtime()))
+            fh.write('[%s] A NON-static-API request did not return method ratelimit, using defaults still.' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
             json.dump({
               'status_code': resp.status_code,
               'content': resp.text,
