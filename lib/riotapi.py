@@ -41,6 +41,9 @@ def compare_ratelimits_to_requesthistory(ratelimits, requesthistory):
   # Else, if all checks
   return False, None # False as in "ratelimit not exceeded"
 
+def headers_to_normal_dict(headers_obj):
+  return {key:val for key,val in headers_obj.items()}
+
 """
 Standard regional RIOT API platform prefixes
 """
@@ -196,7 +199,7 @@ def get(url, method=None, region=None, is_static=False):
         json.dump({
           'status_code': resp.status_code,
           'content': resp.text,
-          'headers': resp.headers
+          'headers': headers_to_normal_dict(resp.headers)
         }, fh)
         fh.write('\n')
     else:
@@ -210,7 +213,7 @@ def get(url, method=None, region=None, is_static=False):
             json.dump({
               'status_code': resp.status_code,
               'content': resp.text,
-              'headers': resp.headers
+              'headers': headers_to_normal_dict(resp.headers)
             }, fh)
             fh.write('\n')
         else:
@@ -219,7 +222,7 @@ def get(url, method=None, region=None, is_static=False):
             json.dump({
               'status_code': resp.status_code,
               'content': resp.text,
-              'headers': resp.headers
+              'headers': headers_to_normal_dict(resp.headers)
             }, fh)
             fh.write('\n')
       else:
@@ -232,7 +235,7 @@ def get(url, method=None, region=None, is_static=False):
             json.dump({
               'status_code': resp.status_code,
               'content': resp.text,
-              'headers': resp.headers
+              'headers': headers_to_normal_dict(resp.headers)
             }, fh)
             fh.write('\n')
         else:
@@ -241,7 +244,7 @@ def get(url, method=None, region=None, is_static=False):
             json.dump({
               'status_code': resp.status_code,
               'content': resp.text,
-              'headers': resp.headers
+              'headers': headers_to_normal_dict(resp.headers)
             }, fh)
             fh.write('\n')
         # Update method-ratelimit
@@ -253,7 +256,7 @@ def get(url, method=None, region=None, is_static=False):
             json.dump({
               'status_code': resp.status_code,
               'content': resp.text,
-              'headers': resp.headers
+              'headers': headers_to_normal_dict(resp.headers)
             }, fh)
             fh.write('\n')
         else:
@@ -262,7 +265,7 @@ def get(url, method=None, region=None, is_static=False):
             json.dump({
               'status_code': resp.status_code,
               'content': resp.text,
-              'headers': resp.headers
+              'headers': headers_to_normal_dict(resp.headers)
             }, fh)
             fh.write('\n')
 
