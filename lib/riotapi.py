@@ -198,7 +198,7 @@ def get(url, method=None, region=None, is_static=False):
         fh.write('[%s] API request returned non-200.' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
         json.dump({
           'status_code': resp.status_code,
-          'content': resp.text,
+          'content': resp.text[0:100], # Limit this in case something like... massive, youknow, "too big", comes around.
           'headers': headers_to_normal_dict(resp.headers)
         }, fh)
         fh.write('\n')
@@ -207,21 +207,25 @@ def get(url, method=None, region=None, is_static=False):
         # Update static-ratelimit
         static_rl = resp.headers.get('X-Method-Rate-Limit', None)
         if static_rl is not None:
-          cache.set('RL_STATIC', list(map(lambda textual_rl: textual_rl.split(':'), static_rl.split(','))))
-          with open(LOG_PATH, 'a') as fh:
-            fh.write('[%s] Updated static-API cache-rate-limit since found a new one.' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
-            json.dump({
-              'status_code': resp.status_code,
-              'content': resp.text,
-              'headers': headers_to_normal_dict(resp.headers)
-            }, fh)
-            fh.write('\n')
+          received_limits = list(map(lambda textual_rl: textual_rl.split(':'), static_rl.split(',')))
+          old_limits = cache.get('RL_STATIC', None)
+          if old_limits is None or json.dumps(sorted(received_limits, lambda x: x[1])) != json.dumps(sorted(old_limits, lambda x: x[1])):
+            cache.set('RL_STATIC', received_limits)
+            with open(LOG_PATH, 'a') as fh:
+              fh.write('[%s] Updated static-API cache-rate-limit since found a new one.' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
+              fh.write('New rate limit: ' + json.dumps(received_limits))
+              json.dump({
+                'status_code': resp.status_code,
+                'content': resp.text[0:100], # Limit this in case something like... massive, youknow, "too big", comes around.
+                'headers': headers_to_normal_dict(resp.headers)
+              }, fh)
+              fh.write('\n')
         else:
           with open(LOG_PATH, 'a') as fh:
             fh.write('[%s] A static-API request did not return method ratelimit, using defaults still.' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
             json.dump({
               'status_code': resp.status_code,
-              'content': resp.text,
+              'content': resp.text[0:100], # Limit this in case something like... massive, youknow, "too big", comes around.
               'headers': headers_to_normal_dict(resp.headers)
             }, fh)
             fh.write('\n')
@@ -229,42 +233,50 @@ def get(url, method=None, region=None, is_static=False):
         # Update app-ratelimit
         app_rl = resp.headers.get('X-App-Rate-Limit', None)
         if app_rl is not None:
-          cache.set('RL_APP', list(map(lambda textual_rl: textual_rl.split(':'), app_rl.split(','))))
-          with open(LOG_PATH, 'a') as fh:
-            fh.write('[%s] Updated app cache-rate-limit since found a new one.' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
-            json.dump({
-              'status_code': resp.status_code,
-              'content': resp.text,
-              'headers': headers_to_normal_dict(resp.headers)
-            }, fh)
-            fh.write('\n')
+          received_limits = list(map(lambda textual_rl: textual_rl.split(':'), app_rl.split(',')))
+          old_limits = cache.get('RL_APP', None)
+          if old_limits is None or json.dumps(sorted(received_limits, lambda x: x[1])) != json.dumps(sorted(old_limits, lambda x: x[1])):
+            cache.set('RL_APP', received_limits)
+            with open(LOG_PATH, 'a') as fh:
+              fh.write('[%s] Updated app cache-rate-limit since found a new one.' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
+              fh.write('New rate limit: ' + json.dumps(received_limits))
+              json.dump({
+                'status_code': resp.status_code,
+                'content': resp.text[0:100], # Limit this in case something like... massive, youknow, "too big", comes around.
+                'headers': headers_to_normal_dict(resp.headers)
+              }, fh)
+              fh.write('\n')
         else:
           with open(LOG_PATH, 'a') as fh:
             fh.write('[%s] A NON-static-API request did not return app ratelimit, using defaults still.' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
             json.dump({
               'status_code': resp.status_code,
-              'content': resp.text,
+              'content': resp.text[0:100], # Limit this in case something like... massive, youknow, "too big", comes around.
               'headers': headers_to_normal_dict(resp.headers)
             }, fh)
             fh.write('\n')
         # Update method-ratelimit
         method_rl = resp.headers.get('X-Method-Rate-Limit', None)
         if method_rl is not None:
-          cache.set('RL_METHOD_'+method, list(map(lambda textual_rl: textual_rl.split(':'), method_rl.split(','))))
-          with open(LOG_PATH, 'a') as fh:
-            fh.write('[%s] Updated method cache-rate-limit since found a new one.' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
-            json.dump({
-              'status_code': resp.status_code,
-              'content': resp.text,
-              'headers': headers_to_normal_dict(resp.headers)
-            }, fh)
-            fh.write('\n')
+          received_limits = list(map(lambda textual_rl: textual_rl.split(':'), method_rl.split(',')))
+          old_limits = cache.get('RL_METHOD_', None)
+          if old_limits is None or json.dumps(sorted(received_limits, lambda x: x[1])) != json.dumps(sorted(old_limits, lambda x: x[1])):
+            cache.set('RL_METHOD_'+method, received_limits)
+            with open(LOG_PATH, 'a') as fh:
+              fh.write('[%s] Updated method cache-rate-limit since found a new one.' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
+              fh.write('New rate limit: ' + json.dumps(received_limits))
+              json.dump({
+                'status_code': resp.status_code,
+                'content': resp.text[0:100], # Limit this in case something like... massive, youknow, "too big", comes around.
+                'headers': headers_to_normal_dict(resp.headers)
+              }, fh)
+              fh.write('\n')
         else:
           with open(LOG_PATH, 'a') as fh:
             fh.write('[%s] A NON-static-API request did not return method ratelimit, using defaults still.' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
             json.dump({
               'status_code': resp.status_code,
-              'content': resp.text,
+              'content': resp.text[0:100], # Limit this in case something like... massive, youknow, "too big", comes around.
               'headers': headers_to_normal_dict(resp.headers)
             }, fh)
             fh.write('\n')
