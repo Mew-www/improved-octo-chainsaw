@@ -172,10 +172,7 @@ def get(url, method=None, region=None, is_static=False):
     # (Database Query) UPDATE the to-be-used key-use to RequestHistory (so we can release table lock)
     escaped_sqlstr = ("INSERT INTO RequestHistory (RequestURL, Timestamp, IsStatic, Region, Method)"
       + " VALUES (%s, %s, %s, %s, %s)")
-    val_static = "TRUE" if is_static else "FALSE"
-    val_region = region if region is not None else "NULL"
-    val_method = method if method is not None else "NULL"
-    cursor.execute(escaped_sqlstr, (url, int(time.time()), val_static, val_region, val_method))
+    cursor.execute(escaped_sqlstr, (url, int(time.time()), is_static, region, method))
     dbh.commit()
 
     # (Database Query) UNLOCK (release) TABLE
