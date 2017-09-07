@@ -258,7 +258,7 @@ def get(url, method=None, region=None, is_static=False):
         method_rl = resp.headers.get('X-Method-Rate-Limit', None)
         if method_rl is not None:
           received_limits = list(map(lambda textual_rl: textual_rl.split(':'), method_rl.split(',')))
-          old_limits = cache.get('RL_METHOD_', None)
+          old_limits = cache.get('RL_METHOD_'+method, None)
           if old_limits is None or json.dumps(sorted(old_limits, key=lambda x: x[1])) != json.dumps(sorted(received_limits, key=lambda x: x[1])):
             cache.set('RL_METHOD_'+method, received_limits, None) # Timeout = None = cache forever
             with open(LOG_PATH, 'a') as fh:
