@@ -118,7 +118,7 @@ def get(url, method=None, region=None, is_static=False):
       cursor.execute("SELECT Timestamp FROM RequestHistory"
         + " WHERE IsStatic=FALSE AND Region=%s"
         + " ORDER BY Timestamp DESC"
-        + " LIMIT " + str(highest_APP_ratelimit), (region, ))
+        + " LIMIT " + str(highest_APP_ratelimit), (region.upper(), ))
       timestamps = map(lambda row: row[0], cursor.fetchall()) # Only timestamp column -> row[0]
 
       # COMPARE request history to rate limits
@@ -146,7 +146,7 @@ def get(url, method=None, region=None, is_static=False):
       cursor.execute("SELECT Timestamp FROM RequestHistory"
         + " WHERE IsStatic=FALSE AND Region=%s AND Method=%s"
         + " ORDER BY Timestamp DESC"
-        + " LIMIT " + str(highest_METHOD_ratelimit), (region, method))
+        + " LIMIT " + str(highest_METHOD_ratelimit), (region.upper(), method))
       timestamps = map(lambda row: row[0], cursor.fetchall()) # Only timestamp column -> row[0]
 
       # COMPARE request history to rate limits
@@ -172,7 +172,7 @@ def get(url, method=None, region=None, is_static=False):
     # (Database Query) UPDATE the to-be-used key-use to RequestHistory (so we can release table lock)
     escaped_sqlstr = ("INSERT INTO RequestHistory (RequestURL, Timestamp, IsStatic, Region, Method)"
       + " VALUES (%s, %s, %s, %s, %s)")
-    cursor.execute(escaped_sqlstr, (url, int(time.time()), is_static, region, method))
+    cursor.execute(escaped_sqlstr, (url, int(time.time()), is_static, region.upper(), method))
     dbh.commit()
 
     # (Database Query) UNLOCK (release) TABLE
@@ -209,7 +209,7 @@ def get(url, method=None, region=None, is_static=False):
           if old_limits is None or json.dumps(sorted(old_limits, key=lambda x: x[1])) != json.dumps(sorted(received_limits, key=lambda x: x[1])):
             cache.set('RL_STATIC', received_limits, None) # Timeout = None = cache forever
             with open(LOG_PATH, 'a') as fh:
-              fh.write('[%s UTC+0] Updated static-API cache-rate-limit since found a new one.\n' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
+              fh.write('[%s UTC+0] Updated (static-API) cache-rate-limit since found a new one.\n' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
               fh.write('Old rate limit: ' + (json.dumps(sorted(old_limits, key=lambda x: x[1])) if old_limits else 'None') + '\n')
               fh.write('New rate limit: ' + json.dumps(sorted(received_limits, key=lambda x: x[1])) + '\n')
               json.dump({
@@ -236,7 +236,7 @@ def get(url, method=None, region=None, is_static=False):
           if old_limits is None or json.dumps(sorted(old_limits, key=lambda x: x[1])) != json.dumps(sorted(received_limits, key=lambda x: x[1])):
             cache.set('RL_APP', received_limits, None) # Timeout = None = cache forever
             with open(LOG_PATH, 'a') as fh:
-              fh.write('[%s UTC+0] Updated app cache-rate-limit since found a new one.\n' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
+              fh.write('[%s UTC+0] Updated (app) cache-rate-limit since found a new one.\n' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
               fh.write('Old rate limit: ' + (json.dumps(sorted(old_limits, key=lambda x: x[1])) if old_limits else 'None') + '\n')
               fh.write('New rate limit: ' + json.dumps(sorted(received_limits, key=lambda x: x[1])) + '\n')
               json.dump({
@@ -262,7 +262,7 @@ def get(url, method=None, region=None, is_static=False):
           if old_limits is None or json.dumps(sorted(old_limits, key=lambda x: x[1])) != json.dumps(sorted(received_limits, key=lambda x: x[1])):
             cache.set('RL_METHOD_'+method, received_limits, None) # Timeout = None = cache forever
             with open(LOG_PATH, 'a') as fh:
-              fh.write('[%s UTC+0] Updated method cache-rate-limit since found a new one.\n' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
+              fh.write('[%s UTC+0] Updated (method '+method+') cache-rate-limit since found a new one.\n' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
               fh.write('Old rate limit: ' + (json.dumps(sorted(old_limits, key=lambda x: x[1])) if old_limits else 'None') + '\n')
               fh.write('New rate limit: ' + json.dumps(sorted(received_limits, key=lambda x: x[1])) + '\n')
               json.dump({
