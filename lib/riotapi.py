@@ -1,7 +1,7 @@
 # Import configs
 from djproject.prod_settings import MYSQL_LEAGUE_USER, MYSQL_LEAGUE_PW, MYSQL_LEAGUE_DBNAME
 from djproject.prod_settings import RIOT_APIKEY
-from djproject.prod_settings import LOG_PATH
+from djproject.prod_settings import ERRLOG_PATH, RATELOG_PATH
 
 # Import DatabaseConnector (for [persistent] cache DB)
 import MySQLdb as MDB
@@ -191,7 +191,7 @@ def get(url, method=None, region=None, is_static=False):
 
     if resp.status_code != 200:
       # Log the error
-      with open(LOG_PATH, 'a') as fh:
+      with open(ERRLOG_PATH, 'a') as fh:
         fh.write('[%s UTC+0] API request returned non-200.\n' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
         json.dump({
           'status_code': resp.status_code,
@@ -208,7 +208,7 @@ def get(url, method=None, region=None, is_static=False):
           old_limits = cache.get('RL_STATIC', None)
           if old_limits is None or json.dumps(sorted(old_limits, key=lambda x: x[1])) != json.dumps(sorted(received_limits, key=lambda x: x[1])):
             cache.set('RL_STATIC', received_limits, None) # Timeout = None = cache forever
-            with open(LOG_PATH, 'a') as fh:
+            with open(RATELOG_PATH, 'a') as fh:
               fh.write('[%s UTC+0] Updated (static-API) cache-rate-limit since found a new one.\n' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
               fh.write('Old rate limit: ' + (json.dumps(sorted(old_limits, key=lambda x: x[1])) if old_limits else 'None') + '\n')
               fh.write('New rate limit: ' + json.dumps(sorted(received_limits, key=lambda x: x[1])) + '\n')
@@ -219,7 +219,7 @@ def get(url, method=None, region=None, is_static=False):
               }, fh)
               fh.write('\n\n')
         else:
-          with open(LOG_PATH, 'a') as fh:
+          with open(RATELOG_PATH, 'a') as fh:
             fh.write('[%s UTC+0] A static-API request did not return method ratelimit, using defaults still.\n' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
             json.dump({
               'status_code': resp.status_code,
@@ -235,7 +235,7 @@ def get(url, method=None, region=None, is_static=False):
           old_limits = cache.get('RL_APP', None)
           if old_limits is None or json.dumps(sorted(old_limits, key=lambda x: x[1])) != json.dumps(sorted(received_limits, key=lambda x: x[1])):
             cache.set('RL_APP', received_limits, None) # Timeout = None = cache forever
-            with open(LOG_PATH, 'a') as fh:
+            with open(RATELOG_PATH, 'a') as fh:
               fh.write('[%s UTC+0] Updated (app) cache-rate-limit since found a new one.\n' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
               fh.write('Old rate limit: ' + (json.dumps(sorted(old_limits, key=lambda x: x[1])) if old_limits else 'None') + '\n')
               fh.write('New rate limit: ' + json.dumps(sorted(received_limits, key=lambda x: x[1])) + '\n')
@@ -246,7 +246,7 @@ def get(url, method=None, region=None, is_static=False):
               }, fh)
               fh.write('\n\n')
         else:
-          with open(LOG_PATH, 'a') as fh:
+          with open(RATELOG_PATH, 'a') as fh:
             fh.write('[%s UTC+0] A NON-static-API request did not return app ratelimit, using defaults still.\n' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
             json.dump({
               'status_code': resp.status_code,
@@ -261,7 +261,7 @@ def get(url, method=None, region=None, is_static=False):
           old_limits = cache.get('RL_METHOD_'+method, None)
           if old_limits is None or json.dumps(sorted(old_limits, key=lambda x: x[1])) != json.dumps(sorted(received_limits, key=lambda x: x[1])):
             cache.set('RL_METHOD_'+method, received_limits, None) # Timeout = None = cache forever
-            with open(LOG_PATH, 'a') as fh:
+            with open(RATELOG_PATH, 'a') as fh:
               fh.write('[%s UTC+0] Updated (method %s) cache-rate-limit since found a new one.\n' % (
                 time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()), method
               ))
@@ -274,7 +274,7 @@ def get(url, method=None, region=None, is_static=False):
               }, fh)
               fh.write('\n\n')
         else:
-          with open(LOG_PATH, 'a') as fh:
+          with open(RATELOG_PATH, 'a') as fh:
             fh.write('[%s UTC+0] A NON-static-API request did not return method ratelimit, using defaults still.\n' % time.strftime('%H:%M (%Ss) %d/%m/%Y', time.gmtime()))
             json.dump({
               'status_code': resp.status_code,
