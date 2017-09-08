@@ -106,6 +106,8 @@ def get(url, method=None, region=None, is_static=False):
           }
 
     else: # if not a static API call
+      # Normalize region as, in some parts it's in caps, and other in lowercase
+      region = region.upper()
 
       ###################
       # APP RATE LIMIT(S)
@@ -118,7 +120,7 @@ def get(url, method=None, region=None, is_static=False):
       cursor.execute("SELECT Timestamp FROM RequestHistory"
         + " WHERE IsStatic=FALSE AND Region=%s"
         + " ORDER BY Timestamp DESC"
-        + " LIMIT " + str(highest_APP_ratelimit), (region.upper(), ))
+        + " LIMIT " + str(highest_APP_ratelimit), (region, ))
       timestamps = map(lambda row: row[0], cursor.fetchall()) # Only timestamp column -> row[0]
 
       # COMPARE request history to rate limits
@@ -146,7 +148,7 @@ def get(url, method=None, region=None, is_static=False):
       cursor.execute("SELECT Timestamp FROM RequestHistory"
         + " WHERE IsStatic=FALSE AND Region=%s AND Method=%s"
         + " ORDER BY Timestamp DESC"
-        + " LIMIT " + str(highest_METHOD_ratelimit), (region.upper(), method))
+        + " LIMIT " + str(highest_METHOD_ratelimit), (region, method))
       timestamps = map(lambda row: row[0], cursor.fetchall()) # Only timestamp column -> row[0]
 
       # COMPARE request history to rate limits
@@ -172,7 +174,7 @@ def get(url, method=None, region=None, is_static=False):
     # (Database Query) UPDATE the to-be-used key-use to RequestHistory (so we can release table lock)
     escaped_sqlstr = ("INSERT INTO RequestHistory (RequestURL, Timestamp, IsStatic, Region, Method)"
       + " VALUES (%s, %s, %s, %s, %s)")
-    cursor.execute(escaped_sqlstr, (url, int(time.time()), is_static, region.upper(), method))
+    cursor.execute(escaped_sqlstr, (url, int(time.time()), is_static, region, method))
     dbh.commit()
 
     # (Database Query) UNLOCK (release) TABLE
